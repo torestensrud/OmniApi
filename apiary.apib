@@ -1,0 +1,358 @@
+FORMAT: 1A
+
+# Varner Omni API reference
+
+Varner Omni API is a service for placing orders in the webshop. The API is based on REST.
+<br/>
+<br/>
+<b>Allowed HTTPs requests</b><br/>
+POST    : Create resource <br>
+PUT     : Update resource<br>
+GET     : Get a resource or list of resources<br>
+DELETE  : Delete resource<br>
+<br/>
+<br/>
+<b>Description Of Usual Server Responses</b>
+<ul>
+<li>
+<p>200 <code>OK</code> - the request was successful (some API calls may return 201 instead).</p>
+</li>
+<li>
+<p>201 <code>Created</code> - the request was successful and a resource was created.</p>
+</li>
+<li>
+<p>204 <code>No Content</code> - the request was successful but there is no representation to return (i.e. the response is empty).</p>
+</li>
+<li>
+<p>400 <code>Bad Request</code> - the request could not be understood or was missing required parameters.</p>
+</li>
+<li>
+<p>401 <code>Unauthorized</code> - authentication failed or user doesn't have permissions for requested operation.</p>
+</li>
+<li>
+<p>403 <code>Forbidden</code> - access denied.</p>
+</li>
+<li>
+<p>404 <code>Not Found</code> - resource was not found.</p>
+</li>
+<li>
+<p>405 <code>Method Not Allowed</code> - requested method is not supported for resource.</p>
+</li>
+</ul>
+
+# Varner Omni API Root [/]
+
+## Retrieve the Entry Point [GET]
+
++ Response 200 (application/json)
+
+        {
+            "skusUrl": "/omni/products/skus/",
+            "deliveryUrl": "/omni/delivery/",
+            "orderUrl": "/omni/order/",
+            "prelorderUrl": "/omni/order/prelorder"
+        }
+
+## Article  [/omni/products/skus/{skuid}]
+
+### Get Product Information [GET]
+
+Get price and stock information.
+
+<b>Response</b>
+
++ <code>skuId</code> (string) : Id of sku.
++ <code>price</code> (decimal) : Sku price.
++ <code>stock</code> (int) : Current available stock for sku.
+
++ Parameters
+    + skuid: 7050222348681 (required, string) - ID of the sku
+    
++ Response 200 (application/json)
+
+        {
+            "skuId": "7050222348681",
+            "price": 79,
+            "stock": 50
+        }
+
+
+## Article collection  [/omni/products/skus]
+
+### Get Product Information for multiple skus [POST]
+
+Get price and stock information for multiple skus.
+
++ <code>skus</code> (string) : Comma separated list of skus, ex: 7050222348681,7050225553241
+
+<b>Response</b><br>
+Array of skus
+
++ Response 200 (application/json)
+
+        [
+            {
+                "skuId": "7050222348681",
+                "price": 79,
+                "stock": 50
+            },
+            {
+                "skuId": "7050225553241",
+                "price": 149,
+                "stock": 10
+            }
+        ]
+
+
+## Shipping  [/omni/delivery/{zip}/{?provider}{?take}]
+
++ Parameters
+    + zip: 21500  (required, string) - Customer zipcode.
+    + provider: pickupinstore  (optional, string) - Filter on delivery provider.
+    + take: 3 (optional, number) - The number of delivery options to return.
+
+
+### Get Delivery Methods [GET]
+
+Get delivery methods available for a given zipcode.
+
+<b>Response</b>
+
++ <code>type</code> (string) : Type of delivery method, currently three options: <code>Standard</code> <code>Express</code> <code>PickupInStore</code>.
++ <code>name</code> (string) : Name of delivery method as displayed in webshop. 
++ <code>placeOfDeliveries</code> (array) : List of delivery places.
++ <code>name</code> (string) : Name of delivery place.
++ <code>address</code> (string) : Address of delivery place.
++ <code>code</code> (string) : Code of delivery place.
+
++ Response 200 (application/json)
+
+    + Body
+
+            [
+                {   
+                    "type": "Standard",
+                    "name": "Standardleverans / PostNord (1-3 arbetsdagar)",
+                    "placeOfDeliveries": [
+                        {
+                            "name": "Nallens Livs",
+                            "address": "Sevedsgatan 10, 21445, Malmö",
+                            "code": "170573"
+                        }, {
+                            "name": "Ica Malmborgs Mobilia",
+                            "address": " Per Albin Hanssons Väg 40, 21432, Malmö",
+                            "code": "170575"
+                        }
+                    ]
+                },
+                {   
+                    "type": "Express",
+                    "name": "Dörr till Dörr / DHL"
+                },   
+                {   
+                    "type": "PickupInStore",
+                    "name": "Hämta i Cubus-butik (Gratis)",
+                    "placeOfDeliveries": [
+                        {
+                            "name": "Cubus Malmö centrum",
+                            "address": "Södra Förstadsgatan 32, 211 43, Malmö",
+                            "code": "R04"
+                        }, {
+                            "name": "Cubus Nordstan",
+                            "address": "Götgatan 13, 411 05, Göteborg",
+                            "code": "C76"
+                        }
+                    ]
+                }  
+            ]
+
+## Preleminary Order [/omni/order/prelorder/{orderid}]
+
+A Preleminary Order object has the following attributes:
+
++ orderId (string, optional) : Preleminary order id. This is used when updating the preleminary order.
++ referenceReceiptNo (string, required) : Facta Pos receipt reference.
++ shippingMethod (string, required) : <code>Type</code> returned from GetDeliveryMethods.
++ placeOfDeliveryCode (string, optional) : The location id for where the order should be delivered. Required if ShippingMethod is <code>Standard</code> or <code>PickupInStore</code>.
++ firstName (string, required) : Customer's first name.
++ lastName (string, required) : Customer's last name.
++ email (string, required) : Customer's email.
++ mobilePhone (string, required) : Customer's phone number. Prefix can be provided (with +) or else it will be added based on customer's country.
++ crmId (string, optional) : Customer's id in CRM system.
++ street (string, required) : Customer's street address.
++ street2 (string, optional) : Can be provided if multiple address lines.
++ zip (string, required) : Customer's zip code.
++ city (string, required) : Customer's city.
++ countryCode (string, required) : Customer's country code (two letter ISO 3166-2).
++ totalSum (decimal, required) : Total sum of all items in order. This will be used for calculating shipment cost.
++ shippingFee (decimal, optional) : Should be used if shipping fee is decided by salesperson.
++ skuId (string, required) : Sku id of ordered item. 
++ quantity (int, required) : Quantity ordered of sku. 
++ price (decimal, required) : Sku price (included discount). 
++ discount (decimal, optional) : Sku discount. 
+
++ Parameters
+    + orderid: 353453453 (optional, string) - Preleminary order id used for updating order.
+
+### Create a New Preleminary Order [POST]
+
+Creates the preleminary order and calculates the shipping fee.
+The order id should be used when the preleminary order needs to be updated.
+ 
+ <b>Response</b>
+ 
+ + <code>orderId</code> (string) : Preleminary order id. This is used when updating the preleminary order.
+ + <code>shippingFee</code> (decimal) : Total shipping fee for order.
+ + <code>items</code> (array) : Items in order. Quantity might change if item runs of out stock.
+
++ Request (application/json)
+
+        {
+            "orderId": "";
+            "referenceReceiptNo": "82789274823",
+            "shippingMethod": "PickupInStore",
+            "placeOfDeliveryCode": "C76",
+            "firstName": "Fredrik",
+            "lastName": "Lastnamesson",
+            "email": "customer@ateles.se",
+            "mobilePhone": "0701234567",
+            "crmId": 23243324
+            "address": {
+                "street": "Road 6",
+                "street2": "",
+                "zip": "58330",
+                "city": "Gotham City"
+                "countryCode" : "NO"
+            },
+            "totalSum": 599.00,
+            "shippingFee": 0,
+            "items": [
+                {
+                    "skuId": "7322859464677",
+                    "quantity": 1,
+                    "price" : 200
+                    "discount" : 0
+                },
+                {
+                    "skuId": "7322859464721",
+                    "quantity": 1
+                    "price" : 399
+                    "discount" : 0
+                }
+        }
+
++ Response 201 (application/json)
+
+    + Body
+
+            {
+                "orderId": "334564654",
+                "shippingFee": 49,
+                "items": [
+                    {
+                        "skuId": "7322859464677",
+                        "quantity": 1,
+                        "price" : 200
+                        "discount" : 0
+                    },
+                    {
+                        "skuId": "7322859464721",
+                        "quantity": 1
+                        "price" : 399
+                        "discount" : 0
+                    }
+                ]
+            }
+            
+### Update a Preleminary Order [PUT]
+
+Updates the preliminary order, returns calculated shipping fee.
+
++ Request (application/json)
+
+          {
+            "orderId": "334564654";
+            "referenceReceiptNo": "82789274823",
+            "shippingMethod": "PickupInStore",
+            "placeOfDeliveryCode": "C76",
+            "firstName": "Fredrik",
+            "lastName": "Lastnamesson",
+            "email": "customer@ateles.se",
+            "mobilePhone": "0701234567",
+            "crmId": 23243324
+            "customer": {
+                "street": "Road 6",
+                "street2": "",
+                "zip": "58330",
+                "city": "Gotham City"
+                "countryCode" : "NO"
+            },
+            "totalSum": 599.00,
+            "shippingFee": 0,
+            "items": [
+                {
+                    "skuId": "7322859464677",
+                    "quantity": 1,
+                    "price" : 200
+                    "discount" : 0
+                },
+                {
+                    "skuId": "7322859464721",
+                    "quantity": 1
+                    "price" : 399
+                    "discount" : 0
+                }
+        }
+
+
++ Response 200 (application/json)
+
+    + Body
+
+            {
+                "orderId": "334564654",
+                "shippingFee": 49,
+                "items": [
+                    {
+                        "skuId": "7322859464677",
+                        "quantity": 1,
+                        "price" : 200
+                        "discount" : 0
+                    },
+                    {
+                        "skuId": "7322859464721",
+                        "quantity": 1
+                        "price" : 399
+                        "discount" : 0
+                    }
+                ]
+            }
+            
+### Delete a Preleminary Order [DELETE]
++ Response 200
+
+        { 
+            "result": True
+        }
+        
+
+## Order [/omni/order/{orderid}]
+
+### Create Order [POST]
+
+Turns a preleminary order into an actual order. 
+Must include a transaction reference in the request:
+
++ transactionId (string, required) : Transaction reference from NETS. Will be used to capture the payment.
+
++ Request (application/json)
+
+        {
+            "transactionId": "5766573453487686"
+        }
+
++ Response 201
+
+        { 
+            "orderNumber": "334564654"
+        }
