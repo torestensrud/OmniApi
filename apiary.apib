@@ -66,7 +66,7 @@ Get price and stock information.
 + <code>stock</code> (int) : Current available stock for sku.
 
 + Parameters
-    + skuid: 7050222348681 (required, string) - ID of the sku
+    + skuid: 7050222348681 (required, string) - Id of the sku
     
 + Response 200 (application/json)
 
@@ -166,7 +166,7 @@ Get delivery methods available for a given zipcode.
                 }  
             ]
 
-## Preleminary Order [/omni/order/prelorder/{orderid}]
+## New Preleminary Order [/omni/order/prelorder]
 
 A Preleminary Order object has the following attributes:
 
@@ -190,9 +190,6 @@ A Preleminary Order object has the following attributes:
 + quantity (int, required) : Quantity ordered of sku. 
 + price (decimal, required) : Sku price (included discount). 
 + discount (decimal, optional) : Sku discount. 
-
-+ Parameters
-    + orderid: 353453453 (optional, string) - Preleminary order id used for updating order.
 
 ### Create a New Preleminary Order [POST]
 
@@ -263,7 +260,12 @@ The order id should be used when the preleminary order needs to be updated.
                     }
                 ]
             }
-            
+
+## Existing Preleminary Order [/omni/order/prelorder/{orderid}]
+
++ Parameters
+    + orderid: 353453453 (optional, string) - Preleminary order id used for updating order.
+
 ### Update a Preleminary Order [PUT]
 
 Updates the preliminary order, returns calculated shipping fee.
@@ -338,6 +340,9 @@ Updates the preliminary order, returns calculated shipping fee.
 
 ## Order [/omni/order/{orderid}]
 
++ Parameters
+    + orderid: 334564654 (required, string) - The preleminary order id.
+    
 ### Create Order [POST]
 
 Turns a preleminary order into an actual order. 
