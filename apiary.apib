@@ -1,4 +1,5 @@
 FORMAT: 1A
+HOST: https://omniapi.varner.com/
 
 # Varner Omni API reference
 
@@ -57,16 +58,16 @@ DELETE  : Delete resource<br>
 
 ### Get Product Information [GET]
 
-Get price and stock information.
+Get price and stock information by sku id.
 
 <b>Response</b>
 
-+ <code>skuId</code> (string) : Id of sku.
-+ <code>price</code> (decimal) : Sku price.
-+ <code>stock</code> (int) : Current available stock for sku.
++ `skuId` (string) : Id of sku.
++ `price` (number) : Sku price.
++ `stock` (number) : Current available stock for sku.
 
 + Parameters
-    + skuid: 7050222348681 (required, string) - Id of the sku
+    + skuid: 7050222348681 (string, required) - Id of the sku
     
 + Response 200 (application/json)
 
@@ -83,11 +84,15 @@ Get price and stock information.
 
 Get price and stock information for multiple skus.
 
-+ <code>skus</code> (string) : Comma separated list of skus, ex: 7050222348681,7050225553241
++ `skus` (string) : Comma separated list of skus, ex: 7050222348681,7050225553241
 
 <b>Response</b><br>
 Array of skus
 
++ Request (application/json)
+    + Attributes (object)
+        + skus: 7050222348681,7050225553241 (string, required) - Comma separated list of sku id's.
+     
 + Response 200 (application/json)
 
         [
@@ -104,7 +109,7 @@ Array of skus
         ]
 
 
-## Shipping  [/omni/delivery/{zip}/{?provider}{?take}]
+## Shipping  [/omni/delivery/{zip}{?provider}{?take}]
 
 + Parameters
     + zip: 21500  (required, string) - Customer zipcode.
@@ -166,169 +171,63 @@ Get delivery methods available for a given zipcode.
                 }  
             ]
 
-## New Preleminary Order [/omni/order/prelorder]
+## Preleminary Order [/omni/order/prelorder]
 
-A Preleminary Order object has the following attributes:
-
-+ orderId (string, optional) : Preleminary order id. This is used when updating the preleminary order.
-+ referenceReceiptNo (string, required) : Facta Pos receipt reference.
-+ shippingMethod (string, required) : <code>Type</code> returned from GetDeliveryMethods.
-+ placeOfDeliveryCode (string, optional) : The location id for where the order should be delivered. Required if ShippingMethod is <code>Standard</code> or <code>PickupInStore</code>.
-+ firstName (string, required) : Customer's first name.
-+ lastName (string, required) : Customer's last name.
-+ email (string, required) : Customer's email.
-+ mobilePhone (string, required) : Customer's phone number. Prefix can be provided (with +) or else it will be added based on customer's country.
-+ crmId (string, optional) : Customer's id in CRM system.
-+ street (string, required) : Customer's street address.
-+ street2 (string, optional) : Can be provided if multiple address lines.
-+ zip (string, required) : Customer's zip code.
-+ city (string, required) : Customer's city.
-+ countryCode (string, required) : Customer's country code (two letter ISO 3166-2).
-+ totalSum (decimal, required) : Total sum of all items in order. This will be used for calculating shipment cost.
-+ shippingFee (decimal, optional) : Should be used if shipping fee is decided by salesperson.
-+ skuId (string, required) : Sku id of ordered item. 
-+ quantity (int, required) : Quantity ordered of sku. 
-+ price (decimal, required) : Sku price (included discount). 
-+ discount (decimal, optional) : Sku discount. 
++ Attributes (Preleminary Order Base )
+  
 
 ### Create a New Preleminary Order [POST]
 
 Creates the preleminary order and calculates the shipping fee.
-The order id should be used when the preleminary order needs to be updated.
+The order id that is returned should be used when the preleminary order needs to be updated.
  
  <b>Response</b>
  
  + <code>orderId</code> (string) : Preleminary order id. This is used when updating the preleminary order.
- + <code>shippingFee</code> (decimal) : Total shipping fee for order.
+ + <code>shippingFee</code> (number) : Total shipping fee for order.
  + <code>items</code> (array) : Items in order. Quantity might change if item runs of out stock.
+
++ Attributes (Preleminary Order Base )
 
 + Request (application/json)
 
-        {
-            "orderId": "";
-            "referenceReceiptNo": "82789274823",
-            "shippingMethod": "PickupInStore",
-            "placeOfDeliveryCode": "C76",
-            "firstName": "Fredrik",
-            "lastName": "Lastnamesson",
-            "email": "customer@ateles.se",
-            "mobilePhone": "0701234567",
-            "crmId": 23243324
-            "address": {
-                "street": "Road 6",
-                "street2": "",
-                "zip": "58330",
-                "city": "Gotham City"
-                "countryCode" : "NO"
-            },
-            "totalSum": 599.00,
-            "shippingFee": 0,
-            "items": [
-                {
-                    "skuId": "7322859464677",
-                    "quantity": 1,
-                    "price" : 200
-                    "discount" : 0
-                },
-                {
-                    "skuId": "7322859464721",
-                    "quantity": 1
-                    "price" : 399
-                    "discount" : 0
-                }
-        }
+        + Attributes (Preleminary Order Base )
 
 + Response 201 (application/json)
 
-    + Body
-
-            {
-                "orderId": "334564654",
-                "shippingFee": 49,
-                "items": [
-                    {
-                        "skuId": "7322859464677",
-                        "quantity": 1,
-                        "price" : 200
-                        "discount" : 0
-                    },
-                    {
-                        "skuId": "7322859464721",
-                        "quantity": 1
-                        "price" : 399
-                        "discount" : 0
-                    }
-                ]
-            }
+    + Attributes (object)
+         + orderId: 334564654 (string) - The preleminary order id
+         + shippingFee: 90 (number) - The shipping fee 
+         + `items` (array) - Items in order
+             + (Lineitem)
+             + (Lineitem2)
 
 ## Existing Preleminary Order [/omni/order/prelorder/{orderid}]
 
-+ Parameters
-    + orderid: 353453453 (optional, string) - Preleminary order id used for updating order.
++ Parameters 
+   + orderid: 353453453 (string, required) - Preleminary order id.
+
 
 ### Update a Preleminary Order [PUT]
 
-Updates the preliminary order, returns calculated shipping fee.
+Updates the preliminary order.
+
++ Attributes (Preleminary Order Base )
 
 + Request (application/json)
 
-          {
-            "orderId": "334564654";
-            "referenceReceiptNo": "82789274823",
-            "shippingMethod": "PickupInStore",
-            "placeOfDeliveryCode": "C76",
-            "firstName": "Fredrik",
-            "lastName": "Lastnamesson",
-            "email": "customer@ateles.se",
-            "mobilePhone": "0701234567",
-            "crmId": 23243324
-            "customer": {
-                "street": "Road 6",
-                "street2": "",
-                "zip": "58330",
-                "city": "Gotham City"
-                "countryCode" : "NO"
-            },
-            "totalSum": 599.00,
-            "shippingFee": 0,
-            "items": [
-                {
-                    "skuId": "7322859464677",
-                    "quantity": 1,
-                    "price" : 200
-                    "discount" : 0
-                },
-                {
-                    "skuId": "7322859464721",
-                    "quantity": 1
-                    "price" : 399
-                    "discount" : 0
-                }
-        }
-
-
+        + Attributes (Preleminary Order Base )
+        
 + Response 200 (application/json)
 
-    + Body
+    + Attributes (object)
+         + orderId: 334564654 (string) - The preleminary order id
+         + shippingFee: 90 (number) - The shipping fee 
+         + `items` (array) - Items in order
+             + (Lineitem)
+             + (Lineitem2)
 
-            {
-                "orderId": "334564654",
-                "shippingFee": 49,
-                "items": [
-                    {
-                        "skuId": "7322859464677",
-                        "quantity": 1,
-                        "price" : 200
-                        "discount" : 0
-                    },
-                    {
-                        "skuId": "7322859464721",
-                        "quantity": 1
-                        "price" : 399
-                        "discount" : 0
-                    }
-                ]
-            }
+            
             
 ### Delete a Preleminary Order [DELETE]
 + Response 200
@@ -341,23 +240,65 @@ Updates the preliminary order, returns calculated shipping fee.
 ## Order [/omni/order/{orderid}]
 
 + Parameters
-    + orderid: 334564654 (required, string) - The preleminary order id.
+    + orderid: 334564654 (string, required) - The preleminary order id.
     
 ### Create Order [POST]
 
 Turns a preleminary order into an actual order. 
-Must include a transaction reference in the request:
+Must include the transaction reference from NETS in the request.
 
-+ transactionId (string, required) : Transaction reference from NETS. Will be used to capture the payment.
+
+<b>Response</b>
+
++ `orderNumber` (string) : Ordernumber in webshop.
 
 + Request (application/json)
 
-        {
-            "transactionId": "5766573453487686"
-        }
+    + Attributes (object)
+         + transactionId : 5766573453487686 (string, required) - Transaction reference from NETS.
 
 + Response 201
 
         { 
             "orderNumber": "334564654"
         }
+        
+        
+# Data Structures
+
+## Preleminary Order Base (object)
+
++ referenceReceiptNo: 82789274823 (string, required) - Facta Pos receipt reference.
++ shippingMethod : PickupInStore (string, required) - Type returned from GetDeliveryMethods.
++ placeOfDeliveryCode : C76 (string) - The location id for where the order should be delivered.
+ Required if ShippingMethod is `Standard` or `PickupInStore`.
++ address (Address) - Customer information
++ `items` (array, required) - Items in order
+    + (Lineitem)
+    + (Lineitem2)
++ shippingFee (number) - Should be used if shipping fee is decided by salesperson.
++ totalSum : 599.00 (number, required) - Total sum of all items in order. This will be used for calculating shipment cost.
+
+       
+
+## Address (object)
++ firstName : Fredrik (string, required) - Customer's first name.
++ lastName : Lastnamesson (string, required) - Customer's last name.
++ crmId : 23243324 (string) - Customer's id in CRM system.
++ email : customer@ateles.se (string, required) - Customer's email.
++ mobilePhone : 0701234567 (string, required) - Customer's phone number. Prefix can be provided (with +) or else it will be added based on customer's country.
++ street : Road 6 (string, required) - Customer's street address.
++ street2 : substreet (string) - Can be provided if multiple address lines.
++ zip : 58330 (string, required) - Customer's zip code.
++ city : Gotham City (string, required) - Customer's city.
++ countryCode : NO (string, required) - Customer's country code (two letter ISO 3166-2).
+
+## Lineitem (object)
++ skuId : 734234234 (string, required) - Sku id of ordered item. 
++ quantity : 1 (number, required) - Quantity ordered of sku. 
++ price : 129.00 (number, required) - Sku price (included discount). 
+
+## Lineitem2 (object)
++ skuId : 776554546 (string, required) - Sku id of ordered item. 
++ quantity : 2 (number, required) - Quantity ordered of sku. 
++ price : 340.00 (number, required) - Sku price (included discount).
