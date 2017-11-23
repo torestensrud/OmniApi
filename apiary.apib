@@ -48,13 +48,13 @@ DELETE  : Delete resource<br>
 + Response 200 (application/json)
 
         {
-            "skusUrl": "/omni/products/skus/",
-            "deliveryUrl": "/omni/delivery/",
-            "orderUrl": "/omni/order/",
-            "prelorderUrl": "/omni/order/prelorder"
+            "skusUrl": "/omni/{language}/{chain}/{storeId}/products/skus/",
+            "deliveryUrl": "/omni/{language}/{chain}/{storeId}/delivery/",
+            "orderUrl": "/omni/{language}/{chain}/{storeId}/order/",
+            "prelorderUrl": "/omni/{language}/{chain}/{storeId}/order/prelorder"
         }
 
-## Article  [/omni/products/skus/{skuid}]
+## Article  [/omni/{language}/{chain}/{storeId}/products/skus/{skuid}]
 
 ### Get Product Information [GET]
 
@@ -67,53 +67,69 @@ Get price and stock information by sku id.
 + `stock` (number) : Current available stock for sku.
 
 + Parameters
+    + language : se (string, required) - Two letter country code.
+    + chain : cubus (string, required) - Name of chain.
+    + storeId : 514 (string, required) - Id of store.
     + skuid: 7050222348681 (string, required) - Id of the sku
     
 + Response 200 (application/json)
 
         {
             "skuId": "7050222348681",
-            "price": 79,
+            "listPrice": 79,
+            "salesPrice": 79,
             "stock": 50
         }
 
 
-## Article collection  [/omni/products/skus]
+## Article collection  [/omni/{language}/{chain}/{storeId}/products/skus]
 
 ### Get Product Information for multiple skus [POST]
 
 Get price and stock information for multiple skus.
 
-+ `skus` (string) : Comma separated list of skus, ex: 7050222348681,7050225553241
++ `skus` (array) : Array of sku id's
 
 <b>Response</b><br>
 Array of skus
 
 + Request (application/json)
-    + Attributes (object)
-        + skus: 7050222348681,7050225553241 (string, required) - Comma separated list of sku id's.
+        
+        "skus": 
+                [
+                    {
+                        "skuId": "7050222348681",
+                    },
+                    {
+                        "skuId": "7050225553241",
+                     }
+                ]
      
 + Response 200 (application/json)
 
         [
             {
                 "skuId": "7050222348681",
-                "price": 79,
+                "listPrice": 79,
+                "salesPrice": 79,
                 "stock": 50
             },
             {
                 "skuId": "7050225553241",
-                "price": 149,
+                "listPrice": 149,
+                "salesPrice": 149,
                 "stock": 10
             }
         ]
 
 
-## Shipping  [/omni/delivery/{zip}{?provider}{?take}]
+## Shipping  [/omni/{language}/{chain}/{storeId}/delivery/{zip}{?take}]
 
 + Parameters
+    + language : se (string, required) - Two letter country code.
+    + chain : cubus (string, required) - Name of chain.
+    + storeId : 514 (string, required) - Id of store.
     + zip: 21500  (required, string) - Customer zipcode.
-    + provider: pickupinstore  (optional, string) - Filter on delivery provider.
     + take: 3 (optional, number) - The number of delivery options to return.
 
 
@@ -123,12 +139,14 @@ Get delivery methods available for a given zipcode.
 
 <b>Response</b>
 
-+ <code>type</code> (string) : Type of delivery method, currently three options: <code>Standard</code> <code>Express</code> <code>PickupInStore</code>.
-+ <code>name</code> (string) : Name of delivery method as displayed in webshop. 
-+ <code>placeOfDeliveries</code> (array) : List of delivery places.
-+ <code>name</code> (string) : Name of delivery place.
-+ <code>address</code> (string) : Address of delivery place.
-+ <code>code</code> (string) : Code of delivery place.
++ `type` (string) : Type of delivery method, currently three options: <code>Standard</code> <code>Express</code> <code>PickupInStore</code>.
++ `name` (string) : Name of delivery method as displayed in webshop. 
++ `deliveryId` (string) : System id for delivery method.
++ `price` (string) : Price of delivery method.
++ `placeOfDeliveries` (array) : List of delivery places.
++ `name` (string) : Name of delivery place.
++ `address` (string) : Address of delivery place.
++ `placeOfDeliveryCode` (string) : Code of delivery place.
 
 + Response 200 (application/json)
 
@@ -138,43 +156,55 @@ Get delivery methods available for a given zipcode.
                 {   
                     "type": "Standard",
                     "name": "Standardleverans / PostNord (1-3 arbetsdagar)",
+                    "deliveryId": "r723fb46e-e34e-4c2b-9333-267cabcaf433",
+                    "price": 49,
                     "placeOfDeliveries": [
                         {
                             "name": "Nallens Livs",
                             "address": "Sevedsgatan 10, 21445, Malmö",
-                            "code": "170573"
+                            "placeOfDeliveryCode": "170573"
                         }, {
                             "name": "Ica Malmborgs Mobilia",
                             "address": " Per Albin Hanssons Väg 40, 21432, Malmö",
-                            "code": "170575"
+                            "placeOfDeliveryCode": "170575"
                         }
                     ]
                 },
                 {   
                     "type": "Express",
-                    "name": "Dörr till Dörr / DHL"
+                    "name": "Dörr till Dörr / DHL",
+                    "deliveryId": "c3866549-17e8-4784-b5ea-1cf78c5dd4d5",
+                    "price": 149
                 },   
                 {   
                     "type": "PickupInStore",
                     "name": "Hämta i Cubus-butik (Gratis)",
+                    "deliveryId": "4624010c-3fb0-4d3e-af98-3bf43c7bba3b",
+                    "price": 0,
                     "placeOfDeliveries": [
                         {
                             "name": "Cubus Malmö centrum",
                             "address": "Södra Förstadsgatan 32, 211 43, Malmö",
-                            "code": "R04"
+                            "placeOfDeliveryCode": "R04"
                         }, {
                             "name": "Cubus Nordstan",
                             "address": "Götgatan 13, 411 05, Göteborg",
-                            "code": "C76"
+                            "placeOfDeliveryCode": "C76"
                         }
                     ]
                 }  
             ]
 
-## Preleminary Order [/omni/order/prelorder]
+## Preleminary Order [/omni/{language}/{chain}/{storeId}/order/prelorder]
 
++ Parameters
+    + language : se (string, required) - Two letter country code.
+    + chain : cubus (string, required) - Name of chain.
+    + storeId : 514 (string, required) - Id of store.
+    
 + Attributes (Preleminary Order Base )
-  
+
+
 
 ### Create a New Preleminary Order [POST]
 
@@ -183,36 +213,34 @@ The order id that is returned should be used when the preleminary order needs to
  
  <b>Response</b>
  
- + <code>orderId</code> (string) : Preleminary order id. This is used when updating the preleminary order.
- + <code>shippingFee</code> (number) : Total shipping fee for order.
- + <code>items</code> (array) : Items in order. Quantity might change if item runs of out stock.
-
-+ Attributes (Preleminary Order Base )
+ + `valid` (string) : Status of creating the preleminary order.
+ + `validationMessage` (string) : If not `valid` a validationMessage will be included.
+ + `orderId` (string) : Preleminary order id. This is used when updating the preleminary order.
+ + `shippingFee` (number) : Total shipping fee for order.
+ + `items` (array) : Items in order. Quantity might change if item runs of out stock.
 
 + Request (application/json)
 
-        + Attributes (Preleminary Order Base )
+    + Attributes (Preleminary Order Base )
 
 + Response 201 (application/json)
 
-    + Attributes (object)
-         + orderId: 334564654 (string) - The preleminary order id
-         + shippingFee: 90 (number) - The shipping fee 
-         + `items` (array) - Items in order
-             + (Lineitem)
-             + (Lineitem2)
+    + Attributes (Preleminary Order Result)
+ 
 
-## Existing Preleminary Order [/omni/order/prelorder/{orderid}]
+## Existing Preleminary Order [/omni/{language}/{chain}/{storeId}/order/prelorder/{orderid}]
 
-+ Parameters 
-   + orderid: 353453453 (string, required) - Preleminary order id.
++ Parameters
+    + language : se (string, required) - Two letter country code.
+    + chain : cubus (string, required) - Name of chain.
+    + storeId : 514 (string, required) - Id of store. 
+    + orderid: 353453453 (string, required) - Preleminary order id.
 
 
 ### Update a Preleminary Order [PUT]
 
 Updates the preliminary order.
 
-+ Attributes (Preleminary Order Base )
 
 + Request (application/json)
 
@@ -220,13 +248,8 @@ Updates the preliminary order.
         
 + Response 200 (application/json)
 
-    + Attributes (object)
-         + orderId: 334564654 (string) - The preleminary order id
-         + shippingFee: 90 (number) - The shipping fee 
-         + `items` (array) - Items in order
-             + (Lineitem)
-             + (Lineitem2)
-
+    + Attributes (Preleminary Order Result )
+         
             
             
 ### Delete a Preleminary Order [DELETE]
@@ -237,9 +260,12 @@ Updates the preliminary order.
         }
         
 
-## Order [/omni/order/{orderid}]
+## Order [/omni/{language}/{chain}/{storeId}/order/{orderid}]
 
 + Parameters
+    + language : se (string, required) - Two letter country code.
+    + chain : cubus (string, required) - Name of chain.
+    + storeId : 514 (string, required) - Id of store. 
     + orderid: 334564654 (string, required) - The preleminary order id.
     
 ### Create Order [POST]
@@ -255,12 +281,12 @@ Must include the transaction reference from NETS in the request.
 + Request (application/json)
 
     + Attributes (object)
-         + transactionId : 5766573453487686 (string, required) - Transaction reference from NETS.
+         + capturePaymentToken : 5766573453487686 (string, required) - Transaction token from NETS.
 
 + Response 201
 
         { 
-            "orderNumber": "334564654"
+            "orderNumber": "CU-8WS-1709596"
         }
         
         
@@ -269,7 +295,8 @@ Must include the transaction reference from NETS in the request.
 ## Preleminary Order Base (object)
 
 + referenceReceiptNo: 82789274823 (string, required) - Facta Pos receipt reference.
-+ shippingMethod : PickupInStore (string, required) - Type returned from GetDeliveryMethods.
++ sellerId: 112 (string, required) - Id of seller.
++ deliveryId : 4624010c-3fb0-4d3e-af98-3bf43c7bba3b (string, required) - DeliveryId returned from GetDeliveryMethods.
 + placeOfDeliveryCode : C76 (string) - The location id for where the order should be delivered.
  Required if ShippingMethod is `Standard` or `PickupInStore`.
 + address (Address) - Customer information
@@ -280,25 +307,32 @@ Must include the transaction reference from NETS in the request.
 + totalSum : 599.00 (number, required) - Total sum of all items in order. This will be used for calculating shipment cost.
 
        
-
+## Preleminary Order Result (object)
++ valid: true (string) - Status of creating the preleminary order.
++ validationMessage (string) - If not valid a validationMessage will be included.
++ orderId: 334564654 (string) - The preleminary order id
++ shippingFee: 90 (number) - Total shipping fee for order.
++ `items` (array) - Items in order. Quantity might change if item runs of out stock.
+     + (Lineitem)
+     + (Lineitem2)
+             
 ## Address (object)
 + firstName : Fredrik (string, required) - Customer's first name.
 + lastName : Lastnamesson (string, required) - Customer's last name.
 + crmId : 23243324 (string) - Customer's id in CRM system.
-+ email : customer@ateles.se (string, required) - Customer's email.
-+ mobilePhone : 0701234567 (string, required) - Customer's phone number. Prefix can be provided (with +) or else it will be added based on customer's country.
++ email : customer@ateles.se (string, required) - Customer's email. Email should be validated to have a valid format.
++ mobilePhone : 0701234567 (string, required) - Customer's phone number.
 + street : Road 6 (string, required) - Customer's street address.
-+ street2 : substreet (string) - Can be provided if multiple address lines.
++ street2 : C/O adress (string) - Can be provided if C/O adress or multiple address lines.
 + zip : 58330 (string, required) - Customer's zip code.
 + city : Gotham City (string, required) - Customer's city.
-+ countryCode : NO (string, required) - Customer's country code (two letter ISO 3166-2).
 
 ## Lineitem (object)
 + skuId : 734234234 (string, required) - Sku id of ordered item. 
 + quantity : 1 (number, required) - Quantity ordered of sku. 
-+ price : 129.00 (number, required) - Sku price (included discount). 
++ price : 129.00 (number, required) - Sales price. 
 
 ## Lineitem2 (object)
 + skuId : 776554546 (string, required) - Sku id of ordered item. 
 + quantity : 2 (number, required) - Quantity ordered of sku. 
-+ price : 340.00 (number, required) - Sku price (included discount).
++ price : 340.00 (number, required) - Sales price.
