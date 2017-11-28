@@ -48,13 +48,13 @@ DELETE  : Delete resource<br>
 + Response 200 (application/json)
 
         {
-            "skusUrl": "/omni/{language}/{chain}/{storeId}/products/skus/",
-            "deliveryUrl": "/omni/{language}/{chain}/{storeId}/delivery/",
-            "orderUrl": "/omni/{language}/{chain}/{storeId}/order/",
-            "prelorderUrl": "/omni/{language}/{chain}/{storeId}/order/prelorder"
+            "skusUrl": "/{language}/{chain}/{storeId}/products/skus/",
+            "deliveryUrl": "/{language}/{chain}/{storeId}/delivery/",
+            "orderUrl": "/{language}/{chain}/{storeId}/order/",
+            "prelorderUrl": "/{language}/{chain}/{storeId}/order/prelorder"
         }
 
-## Article  [/omni/{language}/{chain}/{storeId}/products/skus/{skuid}]
+## Article  [/{language}/{chain}/{storeId}/products/skus/{skuid}]
 
 ### Get Product Information [GET]
 
@@ -82,7 +82,7 @@ Get price and stock information by sku id.
         }
 
 
-## Article collection  [/omni/{language}/{chain}/{storeId}/products/skus]
+## Article collection  [/{language}/{chain}/{storeId}/products/skus]
 
 ### Get Product Information for multiple skus [POST]
 
@@ -123,13 +123,13 @@ Array of skus
         ]
 
 
-## Shipping  [/omni/{language}/{chain}/{storeId}/delivery/{zip}{?take}]
+## Shipping  [/{language}/{chain}/{storeId}/delivery/{zip}{?take}]
 
 + Parameters
-    + language : se (string, required) - Two letter country code.
+    + language : no (string, required) - Two letter country code.
     + chain : cubus (string, required) - Name of chain.
     + storeId : 514 (string, required) - Id of store.
-    + zip: 21500  (required, string) - Customer zipcode.
+    + zip: 1353  (required, string) - Customer zipcode.
     + take: 3 (optional, number) - The number of delivery options to return.
 
 
@@ -142,7 +142,7 @@ Get delivery methods available for a given zipcode.
 + `type` (string) : Type of delivery method, currently three options: <code>Standard</code> <code>Express</code> <code>PickupInStore</code>.
 + `name` (string) : Name of delivery method as displayed in webshop. 
 + `deliveryId` (string) : System id for delivery method.
-+ `price` (string) : Price of delivery method.
++ `shippingFee` (string) : Price of delivery method.
 + `placeOfDeliveries` (array) : List of delivery places.
 + `name` (string) : Name of delivery place.
 + `address` (string) : Address of delivery place.
@@ -157,7 +157,7 @@ Get delivery methods available for a given zipcode.
                     "type": "Standard",
                     "name": "Standardleverans / PostNord (1-3 arbetsdagar)",
                     "deliveryId": "r723fb46e-e34e-4c2b-9333-267cabcaf433",
-                    "price": 49,
+                    "shippingFee": 49,
                     "placeOfDeliveries": [
                         {
                             "name": "Nallens Livs",
@@ -174,13 +174,13 @@ Get delivery methods available for a given zipcode.
                     "type": "Express",
                     "name": "Dörr till Dörr / DHL",
                     "deliveryId": "c3866549-17e8-4784-b5ea-1cf78c5dd4d5",
-                    "price": 149
+                    "shippingFee": 149
                 },   
                 {   
                     "type": "PickupInStore",
                     "name": "Hämta i Cubus-butik (Gratis)",
                     "deliveryId": "4624010c-3fb0-4d3e-af98-3bf43c7bba3b",
-                    "price": 0,
+                    "shippingFee": 0,
                     "placeOfDeliveries": [
                         {
                             "name": "Cubus Malmö centrum",
@@ -195,7 +195,7 @@ Get delivery methods available for a given zipcode.
                 }  
             ]
 
-## Preleminary Order [/omni/{language}/{chain}/{storeId}/order/prelorder]
+## Preleminary Order [/{language}/{chain}/{storeId}/order/prelorder]
 
 + Parameters
     + language : se (string, required) - Two letter country code.
@@ -228,7 +228,7 @@ The order id that is returned should be used when the preleminary order needs to
     + Attributes (Preleminary Order Result)
  
 
-## Existing Preleminary Order [/omni/{language}/{chain}/{storeId}/order/prelorder/{orderid}]
+## Existing Preleminary Order [/{language}/{chain}/{storeId}/order/prelorder/{orderid}]
 
 + Parameters
     + language : se (string, required) - Two letter country code.
@@ -260,7 +260,7 @@ Updates the preliminary order.
         }
         
 
-## Order [/omni/{language}/{chain}/{storeId}/order/{orderid}]
+## Order [/{language}/{chain}/{storeId}/order/{orderid}]
 
 + Parameters
     + language : se (string, required) - Two letter country code.
@@ -271,12 +271,14 @@ Updates the preliminary order.
 ### Create Order [POST]
 
 Turns a preleminary order into an actual order. 
+Requires a `valid` status response from Create/Update Preleminary Order.
 Must include the transaction reference from NETS in the request.
 
 
 <b>Response</b>
 
 + `orderNumber` (string) : Ordernumber in webshop.
++ `receiptId` (string) : Receipt id in webshop.
 
 + Request (application/json)
 
@@ -286,7 +288,8 @@ Must include the transaction reference from NETS in the request.
 + Response 201
 
         { 
-            "orderNumber": "CU-8WS-1709596"
+            "orderNumber": "CU-8WS-1709596",
+            "receiptId": "3011709636"
         }
         
         
