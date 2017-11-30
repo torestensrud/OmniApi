@@ -72,7 +72,7 @@ Get price and stock information by sku id.
     + storeId : 514 (string, required) - Id of store.
     + skuid: 71862860006 (string, required) - Id of the sku
     
-+ Response 200 (application/json)
++ Response 200 (application/json; charset=utf-8)
 
         {
             "skuId": "71862860006",
@@ -143,7 +143,7 @@ Get delivery methods available for a given zipcode.
 + `address` (string) : Address of delivery place.
 + `placeOfDeliveryCode` (string) : Code of delivery place.
 
-+ Response 200 (application/json)
++ Response 200 (application/json; charset=utf-8)
 
     + Body
 
@@ -218,7 +218,7 @@ The order id that is returned should be used when the preleminary order needs to
 
     + Attributes (Preleminary Order Base )
 
-+ Response 201 (application/json)
++ Response 201 (application/json; charset=utf-8)
 
     + Attributes (Preleminary Order Result)
  
@@ -241,14 +241,14 @@ Updates the preliminary order.
 
         + Attributes (Preleminary Order Base )
         
-+ Response 200 (application/json)
++ Response 200 (application/json; charset=utf-8)
 
     + Attributes (Preleminary Order Result )
          
             
             
 ### Delete a Preleminary Order [DELETE]
-+ Response 200
++ Response 200 (application/json; charset=utf-8)
 
         { 
             "result": True
@@ -280,7 +280,7 @@ Must include the transaction reference from NETS in the request.
     + Attributes (object)
          + capturePaymentToken : 5766573453487686 (string, required) - Transaction token from NETS.
 
-+ Response 201
++ Response 201 (application/json; charset=utf-8)
 
         { 
             "orderNumber": "CU-8WS-1709596",
