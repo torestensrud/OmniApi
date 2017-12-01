@@ -294,6 +294,7 @@ Must include the transaction reference from NETS in the request.
 
 + referenceReceiptNo: 82789274823 (string, required) - Facta Pos receipt reference.
 + sellerId: 112 (string, required) - Id of seller.
++ varnerEmployeeId: 980 (string) - If the customer is a Varner employee the employee id should be provided.
 + deliveryId : 4624010c-3fb0-4d3e-af98-3bf43c7bba3b (string, required) - DeliveryId returned from GetDeliveryMethods.
 + placeOfDeliveryCode : C76 (string) - The location id for where the order should be delivered.
  Required if ShippingMethod is `Standard` or `PickupInStore`.
@@ -308,7 +309,7 @@ Must include the transaction reference from NETS in the request.
 ## Preleminary Order Result (object)
 + valid: true (string) - Status of creating the preleminary order.
 + validationMessage (string) - If not valid a validationMessage will be included.
-+ orderId: 334564654 (string) - The preleminary order id
++ orderId: 334564654 (string) - The preleminary order id.
 + shippingFee: 90 (number) - Total shipping fee for order.
 + `items` (array) - Items in order. Quantity might change if item runs of out stock.
      + (Lineitem)
