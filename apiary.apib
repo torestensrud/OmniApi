@@ -140,7 +140,9 @@ Get delivery methods available for a given zipcode.
 + `shippingFee` (string) : Price of delivery method.
 + `placeOfDeliveries` (array) : List of delivery places.
 + `name` (string) : Name of delivery place.
-+ `address` (string) : Address of delivery place.
++ `street` (string) : Street address of delivery place.
++ `zip` (string) : Zipcode of delivery place.
++ `city` (string) : City of delivery place.
 + `placeOfDeliveryCode` (string) : Code of delivery place.
 
 + Response 200 (application/json; charset=utf-8)
@@ -156,11 +158,15 @@ Get delivery methods available for a given zipcode.
                     "placeOfDeliveries": [
                         {
                             "name": "Nallens Livs",
-                            "address": "Sevedsgatan 10, 21445, Malmö",
+                            "street": "Sevedsgatan 10",
+                            "zip": "21445",
+                            "city": "Malmö",
                             "placeOfDeliveryCode": "170573"
                         }, {
                             "name": "Ica Malmborgs Mobilia",
-                            "address": " Per Albin Hanssons Väg 40, 21432, Malmö",
+                            "street": "Per Albin Hanssons Väg 40",
+                            "zip": "21432",
+                            "city": "Malmö",
                             "placeOfDeliveryCode": "170575"
                         }
                     ]
@@ -179,11 +185,15 @@ Get delivery methods available for a given zipcode.
                     "placeOfDeliveries": [
                         {
                             "name": "Cubus Malmö centrum",
-                            "address": "Södra Förstadsgatan 32, 211 43, Malmö",
+                            "street": "Södra Förstadsgatan 32",
+                            "zip": "211 43",
+                            "city": "Malmö",
                             "placeOfDeliveryCode": "R04"
                         }, {
                             "name": "Cubus Nordstan",
-                            "address": "Götgatan 13, 411 05, Göteborg",
+                            "street": "Götgatan 13",
+                            "zip": "411 05",
+                            "city": "Göteborg",
                             "placeOfDeliveryCode": "C76"
                         }
                     ]
