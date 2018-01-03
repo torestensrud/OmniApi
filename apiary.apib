@@ -68,7 +68,7 @@ Get price and stock information by sku id.
 
 + Parameters
     + language : no (string, required) - Two letter country code.
-    + chain : cubus (string, required) - Name of chain.
+    + chain : dayslikethis (string, required) - Name of chain.
     + storeId : 514 (string, required) - Id of store.
     + skuid: 71862860006 (string, required) - Id of the sku
     
@@ -93,7 +93,7 @@ Array of sku id's
 
 + Parameters
     + language : no (string, required) - Two letter country code.
-    + chain : cubus (string, required) - Name of chain.
+    + chain : dayslikethis (string, required) - Name of chain.
     + storeId : 514 (string, required) - Id of store.
 
 + Request (application/json)
@@ -122,7 +122,7 @@ Array of sku id's
 
 + Parameters
     + language : no (string, required) - Two letter country code.
-    + chain : cubus (string, required) - Name of chain.
+    + chain : dayslikethis (string, required) - Name of chain.
     + storeId : 514 (string, required) - Id of store.
     + zip: 1353  (required, string) - Customer zipcode.
     + take: 3 (optional, number) - The number of delivery options to return.
@@ -204,7 +204,7 @@ Get delivery methods available for a given zipcode.
 
 + Parameters
     + language : se (string, required) - Two letter country code.
-    + chain : cubus (string, required) - Name of chain.
+    + chain : dayslikethis (string, required) - Name of chain.
     + storeId : 514 (string, required) - Id of store.
     
 + Attributes (Preleminary Order Base )
@@ -237,7 +237,7 @@ The order id that is returned should be used when the preleminary order needs to
 
 + Parameters
     + language : se (string, required) - Two letter country code.
-    + chain : cubus (string, required) - Name of chain.
+    + chain : dayslikethis (string, required) - Name of chain.
     + storeId : 514 (string, required) - Id of store. 
     + orderid: 353453453 (string, required) - Preleminary order id.
 
@@ -269,7 +269,7 @@ Updates the preliminary order.
 
 + Parameters
     + language : se (string, required) - Two letter country code.
-    + chain : cubus (string, required) - Name of chain.
+    + chain : dayslikethis (string, required) - Name of chain.
     + storeId : 514 (string, required) - Id of store. 
     + orderid: 334564654 (string, required) - The preleminary order id.
     
@@ -337,11 +337,11 @@ Must include the transaction reference from NETS in the request.
 + city : Gotham City (string, required) - Customer's city.
 
 ## Lineitem (object)
-+ skuId : 734234234 (string, required) - Sku id of ordered item. 
++ skuId : 72020170004 (string, required) - Sku id of ordered item. 
 + quantity : 1 (number, required) - Quantity ordered of sku. 
 + price : 129.00 (number, required) - Sales price. 
 
 ## Lineitem2 (object)
-+ skuId : 776554546 (string, required) - Sku id of ordered item. 
++ skuId : 72020170006 (string, required) - Sku id of ordered item. 
 + quantity : 2 (number, required) - Quantity ordered of sku. 
 + price : 340.00 (number, required) - Sales price.
