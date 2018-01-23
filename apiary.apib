@@ -48,7 +48,7 @@ DELETE  : Delete resource<br>
 + Response 200 (application/json; charset=utf-8)
 
         {
-            "skusUrl": "/{language}/{chain}/{storeId}/products/skus/",
+            "skusUrl": "/{language}/{chain}/{storeId}/product/skus/",
             "deliveryUrl": "/{language}/{chain}/{storeId}/delivery/",
             "orderUrl": "/{language}/{chain}/{storeId}/order/",
             "prelorderUrl": "/{language}/{chain}/{storeId}/order/prelorder"
@@ -261,7 +261,7 @@ Updates the preliminary order.
 + Response 200 (application/json; charset=utf-8)
 
         { 
-            "result": True
+            "result": true
         }
         
 
@@ -305,8 +305,8 @@ Must include the transaction reference from NETS in the request.
 + referenceReceiptNo: 82789274823 (string, required) - Facta Pos receipt reference.
 + sellerId: 112 (string, required) - Id of seller.
 + varnerEmployeeId: 980 (string) - If the customer is a Varner employee the employee id should be provided.
-+ deliveryId : 4624010c-3fb0-4d3e-af98-3bf43c7bba3b (string, required) - DeliveryId returned from GetDeliveryMethods.
-+ placeOfDeliveryCode : C76 (string) - The location id for where the order should be delivered.
++ deliveryId : `0C6CD198-12EF-4F59-B279-3DD050FA9B36` (string, required) - DeliveryId returned from GetDeliveryMethods.
++ placeOfDeliveryCode : 3813987 (string) - The location id for where the order should be delivered.
  Required if ShippingMethod is `Standard` or `PickupInStore`.
 + address (Address) - Customer information
 + `items` (array, required) - Items in order
