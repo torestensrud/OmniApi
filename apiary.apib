@@ -296,6 +296,27 @@ Must include the transaction reference from NETS in the request.
             "orderNumber": "CU-8WS-1709596",
             "receiptId": "3011709636"
         }
+
+## Reservation [/{language}/{chain}/{storeId}/reservation/{reservationid}]
+
++ Parameters
+    + language : no (string, required) - Two letter country code.
+    + chain : cubus (string, required) - Name of chain.
+    + storeId : 514 (string, required) - Id of store. 
+    + reservationid: 546 (string, required) - The reservation id.
+    
+### Update Reservation [POST]
+
+Updates status of reservation. 
+
++ Request (application/json)
+
+    + Attributes (object)
+         + pickupdate : `2018-02-25` (string, required) - Last date for pickup.
+         + status : delivered (string, required) - Possible values; in progress, rejected, ready, delivered.
+
++ Response 20 (application/json; charset=utf-8)
+
         
         
 # Data Structures
